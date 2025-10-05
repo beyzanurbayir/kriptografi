@@ -252,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!str) return '';
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-
   // === Sekme Yönetimi (ilk yüklemede çalışır) ===
   const tabs = document.querySelectorAll('.tabs button');
   const sections = document.querySelectorAll('.tab');
@@ -264,5 +263,27 @@ document.addEventListener('DOMContentLoaded', () => {
       sections.forEach(s => s.id === target ? s.classList.add('active') : s.classList.remove('active'));
     });
   });
+
+  // === Dark/Light Mode Toggle ===
+  const modeToggle = document.getElementById('modeToggle');
+  if (modeToggle) {
+    // Buton tıklama
+    modeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      if(document.body.classList.contains('dark')){
+        modeToggle.textContent = '☀️ Light Mode';
+      } else {
+        modeToggle.textContent = '🌙 Dark Mode';
+      }
+    });
+
+    // Başlangıçta buton metnini güncelle (opsiyonel: sistem teması)
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.classList.add('dark');
+      modeToggle.textContent = '☀️ Light Mode';
+    } else {
+      modeToggle.textContent = '🌙 Dark Mode';
+    }
+  }
 
 });

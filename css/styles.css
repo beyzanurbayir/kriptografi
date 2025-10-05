@@ -1,16 +1,175 @@
-*{box-sizing:border-box}
-body{font-family:Arial, sans-serif;margin:0;padding:16px;background:#f7f7f7;color:#222}
-header h1{margin:0 0 4px 0}
-header p{margin:0 0 12px 0;color:#555}
-.tabs{margin-bottom:12px}
-.tabs button{padding:8px 12px;margin-right:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
-.tabs button.active{background:#007acc;color:#fff;border-color:#007acc}
-main{background:#fff;padding:16px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.tab{display:none}
-.tab.active{display:block}
-textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:4px}
-.row{display:flex;gap:8px;align-items:center;margin-top:8px}
-.row input[type="number"]{width:80px;padding:6px}
-button{padding:8px 12px;border-radius:4px;border:1px solid #007acc;background:#007acc;color:white;cursor:pointer}
-.box{margin-top:12px;padding:8px;border:1px dashed #ccc;background:#fafafa;border-radius:4px}
-label{display:block;margin-top:8px;font-weight:600}
+:root {
+  --bg: #f0f2f5;
+  --main-bg: #fff;
+  --text: #333;
+  --secondary-text: #555;
+  --primary: #007acc;
+  --primary-hover: #005f99;
+  --tab-bg: #e0e0e0;
+  --box-bg: #fafafa;
+}
+
+body.dark {
+  --bg: #121212;
+  --main-bg: #1e1e1e;
+  --text: #eee;
+  --secondary-text: #bbb;
+  --primary: #1e90ff;
+  --primary-hover: #0d5aa7;
+  --tab-bg: #2c2c2c;
+  --box-bg: #222;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0 0 6px;
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+header p {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 1rem;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  background: var(--tab-bg);
+  color: var(--text);
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s, background 0.3s, color 0.3s;
+}
+
+.tabs button:hover {
+  background: var(--primary-hover);
+}
+
+.tabs button.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+main {
+  background: var(--main-bg);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  max-width: 800px;
+  margin: 0 auto;
+  transition: background 0.3s, color 0.3s;
+}
+
+.tab {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab.active {
+  display: block;
+}
+
+textarea, input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  resize: vertical;
+  border: 1px solid #ccc;
+  background: var(--main-bg);
+  color: var(--text);
+  transition: 0.2s, background 0.3s, color 0.3s;
+}
+
+textarea:focus, input[type="number"]:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 4px rgba(0,122,204,0.3);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.row input[type="number"] {
+  width: 80px;
+  padding: 6px 8px;
+}
+
+button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s, background 0.3s;
+}
+
+button:hover {
+  background: var(--primary-hover);
+}
+
+.box {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px dashed #ccc;
+  background: var(--box-bg);
+  border-radius: 6px;
+  max-height: 360px;
+  overflow-y: auto;
+  transition: background 0.3s, color 0.3s;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tabs {
+    flex-wrap: wrap;
+  }
+}
