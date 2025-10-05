@@ -1,0 +1,16 @@
+*{box-sizing:border-box}
+body{font-family:Arial, sans-serif;margin:0;padding:16px;background:#f7f7f7;color:#222}
+header h1{margin:0 0 4px 0}
+header p{margin:0 0 12px 0;color:#555}
+.tabs{margin-bottom:12px}
+.tabs button{padding:8px 12px;margin-right:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+.tabs button.active{background:#007acc;color:#fff;border-color:#007acc}
+main{background:#fff;padding:16px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.tab{display:none}
+.tab.active{display:block}
+textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:4px}
+.row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.row input[type="number"]{width:80px;padding:6px}
+button{padding:8px 12px;border-radius:4px;border:1px solid #007acc;background:#007acc;color:white;cursor:pointer}
+.box{margin-top:12px;padding:8px;border:1px dashed #ccc;background:#fafafa;border-radius:4px}
+label{display:block;margin-top:8px;font-weight:600}
