@@ -122,6 +122,11 @@ textarea:focus, input[type="number"]:focus {
   margin-top: 12px;
 }
 
+.row label {
+  margin-bottom: 6px;
+  align-self: flex-start;
+}
+
 .row input[type="number"] {
   width: 80px;
   padding: 6px 8px;

@@ -1,7 +1,43 @@
-# Sezar Şifreleme — Uygulama Ödevi
+# Sezar Şifreleme Web Uygulaması
 
-Bu proje Sezar (Caesar) şifrelemesi için web tabanlı bir uygulamadır.
-Alfabe: Türkçe alfabesi (29 harf). Mod işlemleri mod 29 ile yapılacak.
+Bu proje, **Sezar (Caesar) şifrelemesi** için geliştirilmiş **web tabanlı bir uygulamadır**.  
+Uygulama, hem metinleri şifrelemenizi hem de şifreleri çözmenizi sağlar. Ayrıca harf frekans analizi ve brute-force denemeleri ile şifre çözme desteği sunar.
 
-Çalıştırma:
-- index.html dosyasını tarayıcıda açın (veya VSCode Live Server ile çalıştırın).
+---
+
+## Özellikler
+
+- **Şifreleme ve deşifreleme**: Kullanıcıdan alınan metni belirlenen anahtara göre şifreler veya çözer.
+- **Türkçe ve İngilizce alfabe desteği**.
+- **Harf frekans analizi**: Şifreli metindeki harflerin sıklığını gösterir.
+- **Brute-force anahtar denemeleri**: Tüm olası anahtarlar ile şifre çözümünü listeler.
+- **Frekans tabanlı tahminler**: Sık kullanılan harfler üzerinden otomatik anahtar önerileri sunar.
+- **Geçmiş (history) kaydı**: Son yapılan şifreleme ve deşifreleme işlemlerini listeler.
+- **Dark/Light Mode**: Tercihinize göre sayfa temasını değiştirebilirsiniz. Tercihleriniz tarayıcıya kaydedilir.
+
+---
+
+## Alfabe ve Anahtar
+
+- Türkçe alfabe: 29 harf (`a, b, c, ç, d, e, f, g, ğ, h, ı, i, j, k, l, m, n, o, ö, p, r, s, ş, t, u, ü, v, y, z`)
+- Mod işlemleri: **mod 29** (anahtar değerleri alfabenin uzunluğuna göre döngüsel olarak uygulanır).
+
+---
+
+## Kurulum ve Çalıştırma
+
+1. Bu projeyi bilgisayarınıza indirin veya klonlayın.
+2. `index.html` dosyasını herhangi bir modern web tarayıcısında açın.  
+   - Alternatif olarak, **VSCode Live Server** uzantısını kullanabilirsiniz.
+3. Şifreleme veya deşifreleme işlemlerinizi uygulama arayüzünden gerçekleştirin.
+
+---
+
+## Kullanım Notları
+
+- Anahtar değerini 0 ile alfabe uzunluğu-1 arasında giriniz. (Negatif değerler otomatik olarak dönüştürülür)
+- Alfabe seçiminde yaptığınız değişiklikler ve tema tercihleriniz tarayıcıya kaydedilir.
+- Şifreleme ve deşifreleme sırasında alfabe dışında kalan karakterler korunur.
+
+---
+

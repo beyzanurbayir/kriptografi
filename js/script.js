@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
          'y','z']
   };
 
-  // Türkçe için sık harf sıralaması (kabaca) — frekans tahmini için kullanılacak
+  // === Frekans referansı ===
   const freqReference = {
     tr: ['a','e','i','n','r','t','l','k','m','o','u','s','y','d','b','g','ç','ü','ö','ş','v','h','p','z','c','f','j','ğ','ı'],
     en: ['e','t','a','o','i','n','s','r','h','l','d','c','u','m','f','y','w','g','p','b','v','k','x','q','j','z']
@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // === Yardımcı Fonksiyonlar ===
   function normalizeKey(k, len) {
     k = parseInt(k) || 0;
-    k = ((k % len) + len) % len;
-    return k;
+    return ((k % len) + len) % len;
   }
 
   function shiftChar(ch, key, alfabe, mode='encrypt') {
@@ -29,113 +28,175 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLetter = ch.toLowerCase() !== ch.toUpperCase();
     const lower = ch.toLowerCase();
     const idx = alfabe.indexOf(lower);
-    if (idx === -1) {
-      // Alfabe dışı karakterleri koru
-      return ch;
-    }
+    if (idx === -1) return ch; // alfabe dışı karakterleri koru
     const len = alfabe.length;
-    let newIndex;
-    if (mode === 'encrypt') {
-      newIndex = (idx + key) % len;
-    } else {
-      newIndex = (idx - key + len) % len;
-    }
+    const newIndex = mode === 'encrypt' ? (idx + key) % len : (idx - key + len) % len;
     const out = alfabe[newIndex];
-    return (ch === ch.toUpperCase() && isLetter) ? out.toUpperCase() : out;
+    return isLetter && ch === ch.toUpperCase() ? out.toUpperCase() : out;
   }
 
   function processText(text, key, alfabe, mode='encrypt') {
     const k = normalizeKey(key, alfabe.length);
-    let result = '';
-    for (let ch of text) {
-      result += shiftChar(ch, k, alfabe, mode);
-    }
-    return result;
+    return Array.from(text).map(ch => shiftChar(ch, k, alfabe, mode)).join('');
   }
 
-  // Harf frekansını hesapla (sadece alfabe içindeki harfleri sayar)
   function letterFrequencies(text, alfabe) {
     const freqs = {};
     for (let ch of alfabe) freqs[ch] = 0;
     let total = 0;
     for (let ch of text) {
       const lower = ch.toLowerCase();
-      if (alfabe.indexOf(lower) !== -1) {
-        freqs[lower] += 1;
-        total += 1;
+      if (alfabe.includes(lower)) {
+        freqs[lower]++;
+        total++;
       }
     }
     return {freqs, total};
   }
 
-  // Frekans tablosunu sıralı dizi olarak döndür
   function sortedFreqList(freqs) {
-    const arr = Object.entries(freqs).map(([ch,c]) => ({ch, count: c}));
-    arr.sort((a,b) => b.count - a.count);
-    return arr;
+    return Object.entries(freqs)
+                 .map(([ch,c]) => ({ch,count:c}))
+                 .sort((a,b) => b.count - a.count);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function copyToClipboard(text) {
+    try {
+      navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  // === History Fonksiyonu ===
+  function addToHistory(type, input, output, key, alfabe) {
+    const listId = type === 'encrypt' ? 'encryptHistoryList' : 'decryptHistoryList';
+    const list = document.getElementById(listId);
+    if (!list) return;
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>k=${key}, alfabe=${alfabe}</strong> — Input: ${escapeHtml(input)} | Output: ${escapeHtml(output)}`;
+    list.prepend(li);
+    if (list.children.length > 10) list.removeChild(list.lastChild);
+  }
+
+  // === localStorage Alfabe ===
+  const encryptSelect = document.getElementById('alphabetEncrypt');
+  const decryptSelect = document.getElementById('alphabetDecrypt');
+
+  if(encryptSelect){
+    const saved = localStorage.getItem('alphabetEncrypt');
+    if(saved) encryptSelect.value = saved;
+    encryptSelect.addEventListener('change', e => localStorage.setItem('alphabetEncrypt', e.target.value));
+  }
+
+  if(decryptSelect){
+    const saved = localStorage.getItem('alphabetDecrypt');
+    if(saved) decryptSelect.value = saved;
+    decryptSelect.addEventListener('change', e => localStorage.setItem('alphabetDecrypt', e.target.value));
+  }
+
+  // === Dark/Light Mode ===
+  const modeToggle = document.getElementById('modeToggle');
+  if(modeToggle){
+    const savedMode = localStorage.getItem('mode') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if(savedMode === 'dark') document.body.classList.add('dark');
+    modeToggle.textContent = savedMode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+    modeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('mode', isDark ? 'dark' : 'light');
+      modeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
   }
 
   // === Şifreleme ===
   document.getElementById('btnEncrypt').addEventListener('click', () => {
     const plain = document.getElementById('plainInput').value;
-    const keyRaw = document.getElementById('keyEncrypt').value;
-    const key = parseInt(keyRaw) || 0;
-    const mode = document.getElementById('alphabetEncrypt').value;
+    const key = parseInt(document.getElementById('keyEncrypt').value) || 0;
+    const mode = encryptSelect.value;
     const alfabe = alfabetler[mode];
-    if (!plain) { alert('Lütfen düz metin giriniz.'); return; }
+    if(!plain){ alert('Lütfen düz metin giriniz.'); return; }
     const cipher = processText(plain, key, alfabe, 'encrypt');
     document.getElementById('cipherOutput').value = cipher;
-    // Şifrelerken kullanılan alfabe deşifre seçiminde seçili olsun
-    const decryptSelect = document.getElementById('alphabetDecrypt');
-    if (decryptSelect) decryptSelect.value = mode;
+    if(decryptSelect) decryptSelect.value = mode;
+    addToHistory('encrypt', plain, cipher, key, mode);
   });
 
   // === De-Şifreleme ===
   document.getElementById('btnDecrypt').addEventListener('click', () => {
     const cipher = document.getElementById('cipherInput').value;
-    const keyRaw = document.getElementById('keyDecrypt').value;
-    const key = parseInt(keyRaw) || 0;
-    const mode = document.getElementById('alphabetDecrypt').value;
+    const key = parseInt(document.getElementById('keyDecrypt').value) || 0;
+    const mode = decryptSelect.value;
     const alfabe = alfabetler[mode];
-    if (!cipher) { alert('Lütfen şifreli metin giriniz.'); return; }
+    if(!cipher){ alert('Lütfen şifreli metin giriniz.'); return; }
     const plain = processText(cipher, key, alfabe, 'decrypt');
     document.getElementById('plainOutput').value = plain;
-    // simetri için encrypt select de set edelim
-    const encryptSelect = document.getElementById('alphabetEncrypt');
-    if (encryptSelect) encryptSelect.value = mode;
+    if(encryptSelect) encryptSelect.value = mode;
+    addToHistory('decrypt', cipher, plain, key, mode);
   });
 
   // === Şifre Kırma ===
+  function drawFrequencyChart(freqs, alfabe) {
+    const canvas = document.getElementById('freqCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const total = Object.values(freqs).reduce((a,b)=>a+b,0);
+    const barWidth = canvas.width / alfabe.length * 0.8;
+    const gap = canvas.width / alfabe.length * 0.2;
+    alfabe.forEach((ch,i)=>{
+      const freq = freqs[ch]/total;
+      const barHeight = freq*canvas.height;
+      ctx.fillStyle = '#007acc';
+      ctx.fillRect(i*(barWidth+gap), canvas.height-barHeight, barWidth, barHeight);
+      ctx.fillStyle = '#222';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(ch, i*(barWidth+gap)+barWidth/2, canvas.height-2);
+    });
+  }
+
   document.getElementById('btnCrack').addEventListener('click', () => {
     const cipher = document.getElementById('crackInput').value;
-    if (!cipher) { alert('Lütfen kırılacak şifreli metni giriniz.'); return; }
-    const mode = document.getElementById('alphabetDecrypt').value || document.getElementById('alphabetEncrypt').value || 'tr';
+    if(!cipher){ alert('Lütfen kırılacak şifreli metni giriniz.'); return; }
+    const mode = decryptSelect?.value || encryptSelect?.value || 'tr';
     const alfabe = alfabetler[mode];
-    // 1) Frekans analizi
+
     const {freqs, total} = letterFrequencies(cipher, alfabe);
-    const sorted = sortedFreqList(freqs); // [{ch, count}, ...]
-    // Göster: frekans sonuçları
+    drawFrequencyChart(freqs, alfabe);
+
+    const sorted = sortedFreqList(freqs);
     const freqResults = document.getElementById('freqResults');
     freqResults.innerHTML = `<strong>Harf Frekansları (alfabe: ${mode.toUpperCase()}, toplam harf: ${total})</strong><br/>`;
     const topN = 8;
     const top = sorted.slice(0, topN);
     freqResults.innerHTML += '<ol>' + top.map(x => `<li>${x.ch} : ${x.count}</li>`).join('') + '</ol>';
 
-    // 2) Brute-force: tüm anahtarları dene ve listele
+    // Brute-force ve frekans tabanlı öneriler
     const candidatesDiv = document.getElementById('crackCandidates');
-    candidatesDiv.innerHTML = `<strong>Tüm anahtar sonuçları (brute-force, ${alfabe.length} anahtar):</strong><br/>`;
+    candidatesDiv.innerHTML = '';
     const ul = document.createElement('div');
     ul.style.maxHeight = '360px';
     ul.style.overflow = 'auto';
     ul.style.padding = '6px';
-    // Build brute-force list
-    for (let k=0; k<alfabe.length; k++) {
+
+    for(let k=0;k<alfabe.length;k++){
       const cand = processText(cipher, k, alfabe, 'decrypt');
-      // kısa ön izleme: eğer çok uzunsa ilk 200 karakter
-      const preview = cand.length > 200 ? cand.slice(0,200) + '...' : cand;
+      const preview = cand.length>200?cand.slice(0,200)+'...':cand;
       const wrap = document.createElement('div');
-      wrap.style.padding = '6px';
-      wrap.style.borderBottom = '1px dashed #ddd';
+      wrap.style.padding='6px';
+      wrap.style.borderBottom='1px dashed #ddd';
       wrap.innerHTML = `
         <div><strong>k = ${k}</strong></div>
         <div style="white-space:pre-wrap;font-family:monospace;margin:6px 0">${escapeHtml(preview)}</div>
@@ -148,142 +209,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     candidatesDiv.appendChild(ul);
 
-    // 3) Frekans tabanlı tahminler: en sık cipher harfini, referans sık harflerle eşleştir
+    // Frekans tabanlı öneriler
     const suggestions = document.createElement('div');
-    suggestions.style.marginTop = '12px';
-    suggestions.innerHTML = `<strong>Frekans tabanlı öneriler (ilk ${topN} ile referans eşleşmeleri):</strong><br/>`;
-    // top[0..] en sık cipher karakterleri
-    const cipherTopChars = top.map(x => x.ch).filter(Boolean);
-    const refOrder = freqReference[mode] || freqReference['tr'];
-    const suggestedList = [];
-    // eşleme: cipherTopChars[i] -> refOrder[j] için temiz anahtar hesapla
-    for (let i=0; i<Math.min(cipherTopChars.length, 4); i++) {
-      for (let j=0; j<Math.min(refOrder.length, 6); j++) {
-        const c = cipherTopChars[i];
-        const p = refOrder[j];
-        // anahtar: shift such that p (plain) + key = c (cipher)  => key = idx(c) - idx(p)  (encrypt form)
-        const idxC = alfabe.indexOf(c);
-        const idxP = alfabe.indexOf(p);
-        if (idxC === -1 || idxP === -1) continue;
-        const keyGuess = ((idxC - idxP) % alfabe.length + alfabe.length) % alfabe.length;
-        const dec = processText(cipher, keyGuess, alfabe, 'decrypt');
-        suggestedList.push({key:keyGuess, map:`${c}→${p}`, dec});
+    suggestions.style.marginTop='12px';
+    suggestions.innerHTML = `<strong>Frekans tabanlı öneriler:</strong><br/>`;
+    const cipherTopChars = top.map(x=>x.ch).filter(Boolean);
+    const refOrder = freqReference[mode]||freqReference['tr'];
+    const suggestedList=[];
+    for(let i=0;i<Math.min(cipherTopChars.length,4);i++){
+      for(let j=0;j<Math.min(refOrder.length,6);j++){
+        const c=cipherTopChars[i], p=refOrder[j];
+        const idxC=alfabe.indexOf(c), idxP=alfabe.indexOf(p);
+        if(idxC===-1 || idxP===-1) continue;
+        const keyGuess = ((idxC-idxP)%alfabe.length + alfabe.length)%alfabe.length;
+        const dec = processText(cipher,keyGuess,alfabe,'decrypt');
+        suggestedList.push({key:keyGuess,map:`${c}→${p}`,dec});
       }
     }
-    // Remove duplicates by key
-    const uniq = [];
-    const seenKeys = new Set();
-    for (const s of suggestedList) {
-      if (!seenKeys.has(s.key)) { uniq.push(s); seenKeys.add(s.key); }
-    }
-    if (uniq.length === 0) {
-      suggestions.innerHTML += '<div>(Öneri bulunamadı)</div>';
-    } else {
-      suggestions.innerHTML += '<ol>' + uniq.map(s => `<li>k=${s.key} (eşleme: ${s.map}) — <button class="useCandidateBtn" data-k="${s.key}" data-mode="${mode}">Kullan</button> <span style="font-family:monospace;display:block;margin-top:4px">${escapeHtml(s.dec.slice(0,200))}${s.dec.length>200?'...':''}</span></li>`).join('') + '</ol>';
-    }
+    // Remove duplicates
+    const uniq=[], seen=new Set();
+    for(const s of suggestedList){ if(!seen.has(s.key)){ uniq.push(s); seen.add(s.key); } }
+    if(uniq.length===0) suggestions.innerHTML+='<div>(Öneri bulunamadı)</div>';
+    else suggestions.innerHTML += '<ol>' + uniq.map(s=>`<li>k=${s.key} (eşleme: ${s.map}) — <button class="useCandidateBtn" data-k="${s.key}" data-mode="${mode}">Kullan</button> <span style="font-family:monospace;display:block;margin-top:4px">${escapeHtml(s.dec.slice(0,200))}${s.dec.length>200?'...':''}</span></li>`).join('')+'</ol>';
     candidatesDiv.appendChild(suggestions);
 
-    // add handlers for buttons
-    document.querySelectorAll('.useCandidateBtn').forEach(b => {
-      b.addEventListener('click', (e) => {
-        const k = parseInt(b.dataset.k);
-        const m = b.dataset.mode;
-        applyCandidateToDecryptTab(cipher, k, m);
-      });
-    });
-    document.querySelectorAll('.copyCandidateBtn').forEach(b => {
-      b.addEventListener('click', (e) => {
-        const text = decodeURIComponent(b.dataset.text);
-        copyToClipboard(text);
-        b.textContent = 'Kopyalandı';
-        setTimeout(()=> b.textContent = 'Kopyala', 1200);
-      });
-    });
+    document.querySelectorAll('.useCandidateBtn').forEach(b=>b.addEventListener('click',()=>applyCandidateToDecryptTab(cipher,parseInt(b.dataset.k),b.dataset.mode)));
+    document.querySelectorAll('.copyCandidateBtn').forEach(b=>b.addEventListener('click',()=>{ const text=decodeURIComponent(b.dataset.text); copyToClipboard(text); b.textContent='Kopyalandı'; setTimeout(()=>b.textContent='Kopyala',1200); }));
   });
 
-  // === Yardım: adayı deşifre sekmesine uygula ve göster ===
-  function applyCandidateToDecryptTab(cipherText, key, mode) {
-    // Set decrypt tab values and trigger decryption
-    const decryptSelect = document.getElementById('alphabetDecrypt');
+  function applyCandidateToDecryptTab(cipherText,key,mode){
+    if(decryptSelect) decryptSelect.value = mode;
     const cipherInput = document.getElementById('cipherInput');
     const keyInput = document.getElementById('keyDecrypt');
     const plainOutput = document.getElementById('plainOutput');
-
-    if (decryptSelect) decryptSelect.value = mode;
-    if (cipherInput) cipherInput.value = cipherText;
-    if (keyInput) keyInput.value = key;
-    // switch to decrypt tab
+    if(cipherInput) cipherInput.value = cipherText;
+    if(keyInput) keyInput.value = key;
     switchToTab('decrypt');
-    // perform decryption and display
     const alfabe = alfabetler[mode];
-    const plain = processText(cipherText, key, alfabe, 'decrypt');
-    if (plainOutput) plainOutput.value = plain;
+    if(plainOutput) plainOutput.value = processText(cipherText,key,alfabe,'decrypt');
   }
 
-  // Sekme geçişi yardımcı
-  function switchToTab(tabId) {
-    const tabs = document.querySelectorAll('.tabs button');
-    const sections = document.querySelectorAll('.tab');
-    tabs.forEach(b => {
-      if (b.dataset.tab === tabId) b.classList.add('active'); else b.classList.remove('active');
-    });
-    sections.forEach(s => {
-      if (s.id === tabId) s.classList.add('active'); else s.classList.remove('active');
-    });
+  function switchToTab(tabId){
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tabId));
+    document.querySelectorAll('.tab').forEach(s=>s.id===tabId ? s.classList.add('active') : s.classList.remove('active'));
   }
 
-  // Basit kopyalama fonksiyonu
-  function copyToClipboard(text) {
-    try {
-      navigator.clipboard.writeText(text);
-    } catch (e) {
-      // fallback
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    }
-  }
-
-  // HTML escape (gösterim için güvenli)
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  // === Sekme Yönetimi (ilk yüklemede çalışır) ===
-  const tabs = document.querySelectorAll('.tabs button');
-  const sections = document.querySelectorAll('.tab');
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabs.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      const target = btn.dataset.tab;
-      sections.forEach(s => s.id === target ? s.classList.add('active') : s.classList.remove('active'));
+  // === Sekme Yönetimi ===
+  document.querySelectorAll('.tabs button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const target=btn.dataset.tab;
+      switchToTab(target);
     });
   });
-
-  // === Dark/Light Mode Toggle ===
-  const modeToggle = document.getElementById('modeToggle');
-  if (modeToggle) {
-    // Buton tıklama
-    modeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      if(document.body.classList.contains('dark')){
-        modeToggle.textContent = '☀️ Light Mode';
-      } else {
-        modeToggle.textContent = '🌙 Dark Mode';
-      }
-    });
-
-    // Başlangıçta buton metnini güncelle (opsiyonel: sistem teması)
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark');
-      modeToggle.textContent = '☀️ Light Mode';
-    } else {
-      modeToggle.textContent = '🌙 Dark Mode';
-    }
-  }
 
 });
