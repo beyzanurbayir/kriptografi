@@ -19,8 +19,15 @@ Uygulama, hem metinleri şifrelemenizi hem de şifreleri çözmenizi sağlar. Ay
 
 ## Alfabe ve Anahtar
 
-- Türkçe alfabe: 29 harf (`a, b, c, ç, d, e, f, g, ğ, h, ı, i, j, k, l, m, n, o, ö, p, r, s, ş, t, u, ü, v, y, z`)
-- Mod işlemleri: **mod 29** (anahtar değerleri alfabenin uzunluğuna göre döngüsel olarak uygulanır).
+- **Türkçe alfabe**: 29 harf  
+  `a, b, c, ç, d, e, f, g, ğ, h, ı, i, j, k, l, m, n, o, ö, p, r, s, ş, t, u, ü, v, y, z`  
+  **Mod işlemleri:** mod 29
+
+- **İngilizce alfabe**: 26 harf  
+  `a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z`  
+  **Mod işlemleri:** mod 26
+
+Anahtar değerleri alfabenin uzunluğuna göre döngüsel olarak uygulanır. Negatif değerler de otomatik olarak dönüştürülür.
 
 ---
 
@@ -35,7 +42,7 @@ Uygulama, hem metinleri şifrelemenizi hem de şifreleri çözmenizi sağlar. Ay
 
 ## Kullanım Notları
 
-- Anahtar değerini 0 ile alfabe uzunluğu-1 arasında giriniz. (Negatif değerler otomatik olarak dönüştürülür)
+- Anahtar değerini 0 ile alfabe uzunluğu-1 arasında giriniz.
 - Alfabe seçiminde yaptığınız değişiklikler ve tema tercihleriniz tarayıcıya kaydedilir.
 - Şifreleme ve deşifreleme sırasında alfabe dışında kalan karakterler korunur.
 
