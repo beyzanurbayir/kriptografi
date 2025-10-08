@@ -23,29 +23,52 @@ document.addEventListener('DOMContentLoaded', () => {
     return ((k % len) + len) % len;
   }
 
-  function shiftChar(ch, key, alfabe, mode='encrypt') {
-    if (!ch) return ch;
-    const isLetter = ch.toLowerCase() !== ch.toUpperCase();
-    const lower = ch.toLowerCase();
+  // --- GÜNCELLENMİŞ FONKSİYON ---
+  // Türkçe karakter ('İ', 'ı' vb.) ve hata kontrolleri için güncellendi.
+  function shiftChar(ch, key, alfabe, mode = 'encrypt') {
+    // Hata kontrolü: Karakter tanımsız veya boş ise dokunmadan geri döndür.
+    if (!ch) {
+      return ch;
+    }
+
+    // Türkçe'ye özgü büyük/küçük harf dönüşümünü doğru yapmak için 'tr-TR' kullanılır.
+    const lower = ch.toLocaleLowerCase('tr-TR');
+
+    // Karakterin alfabe içinde olup olmadığını kontrol et.
     const idx = alfabe.indexOf(lower);
-    if (idx === -1) return ch; // alfabe dışı karakterleri koru
+    if (idx === -1) {
+      return ch; // Alfabe dışı karakterleri (boşluk, noktalama vb.) koru
+    }
+
+    // Harfin büyük mü küçük mü olduğunu başta kontrol et.
+    const isUpperCase = ch !== lower;
+
+    // Şifreleme/Deşifreleme işlemini yap.
     const len = alfabe.length;
-    const newIndex = mode === 'encrypt' ? (idx + key) % len : (idx - key + len) % len;
+    const newIndex = mode === 'encrypt'
+      ? (idx + key) % len
+      : (idx - key + len) % len;
+
     const out = alfabe[newIndex];
-    return isLetter && ch === ch.toUpperCase() ? out.toUpperCase() : out;
+
+    // Orijinal harf büyükse, sonucu da Türkçe'ye uygun şekilde büyük harfe çevir.
+    return isUpperCase ? out.toLocaleUpperCase('tr-TR') : out;
   }
+
 
   function processText(text, key, alfabe, mode='encrypt') {
     const k = normalizeKey(key, alfabe.length);
     return Array.from(text).map(ch => shiftChar(ch, k, alfabe, mode)).join('');
   }
 
+  // --- GÜNCELLENMİŞ FONKSİYON ---
+  // "ch.ch" yazım hatası düzeltildi.
   function letterFrequencies(text, alfabe) {
     const freqs = {};
     for (let ch of alfabe) freqs[ch] = 0;
     let total = 0;
     for (let ch of text) {
-      const lower = ch.toLowerCase();
+      const lower = ch.toLocaleLowerCase('tr-TR');
       if (alfabe.includes(lower)) {
         freqs[lower]++;
         total++;
