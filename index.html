@@ -9,9 +9,7 @@
 <body>
   <header>
     <h1>Sezar Şifreleme Uygulaması</h1>
-    <p>Şifreleme / De-Şifreleme / Şifre Kırma</p>
     <button id="modeToggle" style="margin-top:12px;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;">🌙 Dark Mode</button>
-</header>
   </header>
 
   <nav class="tabs">
@@ -21,7 +19,6 @@
   </nav>
 
   <main>
-    <!-- Şifreleme -->
     <section id="encrypt" class="tab active">
       <label for="plainInput">Düz Metin (girdi):</label>
       <textarea id="plainInput" rows="5" placeholder="Düz metni buraya yazın (Türkçe)"></textarea>
@@ -39,7 +36,6 @@
         </select>
        </div>
 
-
       <label>Şifreli Metin (çıktı):</label>
       <textarea id="cipherOutput" rows="3" readonly></textarea>
 
@@ -49,7 +45,6 @@
     </div>
     </section>
 
-    <!-- De-Şifreleme -->
     <section id="decrypt" class="tab">
       <label for="cipherInput">Şifreli Metin (girdi):</label>
       <textarea id="cipherInput" rows="5" placeholder="Şifreli metni buraya yazın"></textarea>
@@ -76,17 +71,15 @@
     </div>
     </section>
 
-    <!-- Şifre Kırma -->
     <section id="crack" class="tab">
       <label for="crackInput">Şifreli Metin (girdi):</label>
       <textarea id="crackInput" rows="5" placeholder="Kırmak istediğiniz şifreli metni buraya yazın"></textarea>
       <div class="row">
         <button id="btnCrack">Kırmayı Deneye Başla</button>
       </div>
-      <div id="freqResults" class="box">
-        <strong>Harf Frekans Grafiği:</strong>
-        <canvas id="freqCanvas" width="600" height="200"></canvas>
-      </div>
+      
+      <div id="freqList" class="box"></div>
+
       <div id="crackCandidates" class="box"></div>
     </section>
   </main>

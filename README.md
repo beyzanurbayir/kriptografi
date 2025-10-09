@@ -9,7 +9,7 @@ Uygulama, hem metinleri şifrelemenizi hem de şifreleri çözmenizi sağlar. Ay
 
 - **Şifreleme ve deşifreleme**: Kullanıcıdan alınan metni belirlenen anahtara göre şifreler veya çözer.
 - **Türkçe ve İngilizce alfabe desteği**.
-- **Harf frekans analizi**: Şifreli metindeki harflerin sıklığını gösterir.
+- **Harf frekans listesi**: Şifreli metindeki harflerin kullanım sıklığını listeler.
 - **Brute-force anahtar denemeleri**: Tüm olası anahtarlar ile şifre çözümünü listeler.
 - **Frekans tabanlı tahminler**: Sık kullanılan harfler üzerinden otomatik anahtar önerileri sunar.
 - **Geçmiş (history) kaydı**: Son yapılan şifreleme ve deşifreleme işlemlerini listeler.
@@ -47,4 +47,3 @@ Anahtar değerleri alfabenin uzunluğuna göre döngüsel olarak uygulanır. Neg
 - Şifreleme ve deşifreleme sırasında alfabe dışında kalan karakterler korunur.
 
 ---
-

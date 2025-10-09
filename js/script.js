@@ -23,46 +23,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return ((k % len) + len) % len;
   }
 
-  // --- GÜNCELLENMİŞ FONKSİYON ---
-  // Türkçe karakter ('İ', 'ı' vb.) ve hata kontrolleri için güncellendi.
+  // Türkçe karakter ('İ', 'ı' vb.) ve hata kontrolleri için güncellenmiş fonksiyon
   function shiftChar(ch, key, alfabe, mode = 'encrypt') {
-    // Hata kontrolü: Karakter tanımsız veya boş ise dokunmadan geri döndür.
     if (!ch) {
       return ch;
     }
-
-    // Türkçe'ye özgü büyük/küçük harf dönüşümünü doğru yapmak için 'tr-TR' kullanılır.
     const lower = ch.toLocaleLowerCase('tr-TR');
-
-    // Karakterin alfabe içinde olup olmadığını kontrol et.
     const idx = alfabe.indexOf(lower);
     if (idx === -1) {
-      return ch; // Alfabe dışı karakterleri (boşluk, noktalama vb.) koru
+      return ch;
     }
-
-    // Harfin büyük mü küçük mü olduğunu başta kontrol et.
     const isUpperCase = ch !== lower;
-
-    // Şifreleme/Deşifreleme işlemini yap.
     const len = alfabe.length;
     const newIndex = mode === 'encrypt'
       ? (idx + key) % len
       : (idx - key + len) % len;
-
     const out = alfabe[newIndex];
-
-    // Orijinal harf büyükse, sonucu da Türkçe'ye uygun şekilde büyük harfe çevir.
     return isUpperCase ? out.toLocaleUpperCase('tr-TR') : out;
   }
-
 
   function processText(text, key, alfabe, mode='encrypt') {
     const k = normalizeKey(key, alfabe.length);
     return Array.from(text).map(ch => shiftChar(ch, k, alfabe, mode)).join('');
   }
 
-  // --- GÜNCELLENMİŞ FONKSİYON ---
-  // "ch.ch" yazım hatası düzeltildi.
   function letterFrequencies(text, alfabe) {
     const freqs = {};
     for (let ch of alfabe) freqs[ch] = 0;
@@ -170,26 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // === Şifre Kırma ===
-  function drawFrequencyChart(freqs, alfabe) {
-    const canvas = document.getElementById('freqCanvas');
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const total = Object.values(freqs).reduce((a,b)=>a+b,0);
-    const barWidth = canvas.width / alfabe.length * 0.8;
-    const gap = canvas.width / alfabe.length * 0.2;
-    alfabe.forEach((ch,i)=>{
-      const freq = freqs[ch]/total;
-      const barHeight = freq*canvas.height;
-      ctx.fillStyle = '#007acc';
-      ctx.fillRect(i*(barWidth+gap), canvas.height-barHeight, barWidth, barHeight);
-      ctx.fillStyle = '#222';
-      ctx.font = '12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(ch, i*(barWidth+gap)+barWidth/2, canvas.height-2);
-    });
-  }
-
   document.getElementById('btnCrack').addEventListener('click', () => {
     const cipher = document.getElementById('crackInput').value;
     if(!cipher){ alert('Lütfen kırılacak şifreli metni giriniz.'); return; }
@@ -197,14 +161,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const alfabe = alfabetler[mode];
 
     const {freqs, total} = letterFrequencies(cipher, alfabe);
-    drawFrequencyChart(freqs, alfabe);
 
     const sorted = sortedFreqList(freqs);
-    const freqResults = document.getElementById('freqResults');
-    freqResults.innerHTML = `<strong>Harf Frekansları (alfabe: ${mode.toUpperCase()}, toplam harf: ${total})</strong><br/>`;
-    const topN = 8;
-    const top = sorted.slice(0, topN);
-    freqResults.innerHTML += '<ol>' + top.map(x => `<li>${x.ch} : ${x.count}</li>`).join('') + '</ol>';
+    const freqListDiv = document.getElementById('freqList');
+    
+    // Frekans listesi yazdırma (Grafik kodları kaldırıldı)
+    if (freqListDiv) {
+        freqListDiv.innerHTML = `<strong>Harf Frekansları (alfabe: ${mode.toUpperCase()}, toplam harf: ${total})</strong><br/>`;
+        const topN = 8;
+        const top = sorted.slice(0, topN);
+        freqListDiv.innerHTML += '<ol>' + top.map(x => `<li>${x.ch} : ${x.count}</li>`).join('') + '</ol>';
+    }
 
     // Brute-force ve frekans tabanlı öneriler
     const candidatesDiv = document.getElementById('crackCandidates');
@@ -236,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestions = document.createElement('div');
     suggestions.style.marginTop='12px';
     suggestions.innerHTML = `<strong>Frekans tabanlı öneriler:</strong><br/>`;
+    const top = sorted.slice(0, 8); // TopN'i burada da kullanalım
     const cipherTopChars = top.map(x=>x.ch).filter(Boolean);
     const refOrder = freqReference[mode]||freqReference['tr'];
     const suggestedList=[];
@@ -249,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestedList.push({key:keyGuess,map:`${c}→${p}`,dec});
       }
     }
-    // Remove duplicates
+    
     const uniq=[], seen=new Set();
     for(const s of suggestedList){ if(!seen.has(s.key)){ uniq.push(s); seen.add(s.key); } }
     if(uniq.length===0) suggestions.innerHTML+='<div>(Öneri bulunamadı)</div>';
