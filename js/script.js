@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return ((k % len) + len) % len;
   }
 
-  // Türkçe karakter ('İ', 'ı' vb.) ve hata kontrolleri için güncellenmiş fonksiyon
+  // Türkçe karakter ('İ', 'ı' vb.) ve hata kontrolleri için 
   function shiftChar(ch, key, alfabe, mode = 'encrypt') {
     if (!ch) {
       return ch;
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sorted = sortedFreqList(freqs);
     const freqListDiv = document.getElementById('freqList');
     
-    // Frekans listesi yazdırma (Grafik kodları kaldırıldı)
+    // Frekans listesi yazdırma 
     if (freqListDiv) {
         freqListDiv.innerHTML = `<strong>Harf Frekansları (alfabe: ${mode.toUpperCase()}, toplam harf: ${total})</strong><br/>`;
         const topN = 8;
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestions = document.createElement('div');
     suggestions.style.marginTop='12px';
     suggestions.innerHTML = `<strong>Frekans tabanlı öneriler:</strong><br/>`;
-    const top = sorted.slice(0, 8); // TopN'i burada da kullanalım
+    const top = sorted.slice(0, 8); 
     const cipherTopChars = top.map(x=>x.ch).filter(Boolean);
     const refOrder = freqReference[mode]||freqReference['tr'];
     const suggestedList=[];
