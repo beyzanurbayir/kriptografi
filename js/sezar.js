@@ -1,4 +1,4 @@
-// js/script.js
+// js/sezar.js
 document.addEventListener('DOMContentLoaded', () => {
 
   // === Alfabeler ===

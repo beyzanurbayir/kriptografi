@@ -32,8 +32,20 @@
         <button id="btnEncrypt">Şifrele</button>
       </div>
 
+      <div class="row">
+        <label for="alphabetEncrypt">Alfabe:</label>
+        <select id="alphabetEncrypt">
+            <option value="tr">Türkçe (29 harf)</option>
+            <option value="en">İngilizce (26 harf)</option>
+        </select>
+       </div>
+
       <label>Şifreli Metin (çıktı):</label>
       <textarea id="cipherOutput" rows="3" readonly></textarea>
+      <div id="encryptHistory" class="box">
+        <strong>Şifreleme Geçmişi:</strong>
+        <ol id="encryptHistoryList"></ol>
+    </div>
     </section>
 
     <section id="decrypt" class="tab">
@@ -48,8 +60,20 @@
         <button id="btnDecrypt">Deşifrele</button>
       </div>
 
+      <div class="row">
+        <label for="alphabetDecrypt">Alfabe:</label>
+        <select id="alphabetDecrypt">
+            <option value="tr">Türkçe (29 harf)</option>
+            <option value="en">İngilizce (26 harf)</option>
+        </select>
+        </div>
+
       <label>Düz Metin (çıktı):</label>
       <textarea id="plainOutput" rows="3" readonly></textarea>
+      <div id="decryptHistory" class="box">
+        <strong>Deşifreleme Geçmişi:</strong>
+        <ol id="decryptHistoryList"></ol>
+    </div>
     </section>
 
     <section id="crack" class="tab">
@@ -59,6 +83,14 @@
         <button id="btnCrack">Kırmayı Deneye Başla</button>
       </div>
 
+      <div class="row">
+        <label for="alphabetCrack">Kırma Alfabesi:</label>
+        <select id="alphabetCrack">
+            <option value="en">İngilizce (26 harf)</option>
+            <option value="tr">Türkçe (29 harf)</option>
+        </select>
+       </div>
+       
       <div id="crackCandidates" class="box"></div>
     </section>
   </main>
