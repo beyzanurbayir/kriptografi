@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Doğrusal Şifreleme — Uygulama Ödevi</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Doğrusal Şifreleme Uygulaması</h1>
+    <p>f(x) = ax + b (mod 26)</p>
+    <button id="modeToggle" style="margin-top:12px;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;">🌙 Dark Mode</button>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="encrypt" class="active">Şifreleme</button>
+    <button data-tab="decrypt">De-Şifreleme</button>
+    <button data-tab="crack">Şifre Kırma</button>
+  </nav>
+
+  <main>
+    <section id="encrypt" class="tab active">
+      <label for="plainInput">Düz Metin (girdi):</label>
+      <textarea id="plainInput" rows="5" placeholder="Düz metni buraya yazın (İngilizce)"></textarea>
+
+      <div class="row">
+        <label for="keyAEncrypt">Anahtar (a):</label>
+        <input id="keyAEncrypt" type="number" value="5" />
+        <label for="keyBEncrypt">Anahtar (b):</label>
+        <input id="keyBEncrypt" type="number" value="8" />
+        <button id="btnEncrypt">Şifrele</button>
+      </div>
+
+      <label>Şifreli Metin (çıktı):</label>
+      <textarea id="cipherOutput" rows="3" readonly></textarea>
+    </section>
+
+    <section id="decrypt" class="tab">
+      <label for="cipherInput">Şifreli Metin (girdi):</label>
+      <textarea id="cipherInput" rows="5" placeholder="Şifreli metni buraya yazın"></textarea>
+
+      <div class="row">
+        <label for="keyADecrypt">Anahtar (a):</label>
+        <input id="keyADecrypt" type="number" value="5" />
+        <label for="keyBDecrypt">Anahtar (b):</label>
+        <input id="keyBDecrypt" type="number" value="8" />
+        <button id="btnDecrypt">Deşifrele</button>
+      </div>
+
+      <label>Düz Metin (çıktı):</label>
+      <textarea id="plainOutput" rows="3" readonly></textarea>
+    </section>
+
+    <section id="crack" class="tab">
+      <label for="crackInput">Şifreli Metin (girdi):</label>
+      <textarea id="crackInput" rows="5" placeholder="Kırmak istediğiniz şifreli metni buraya yazın"></textarea>
+      <div class="row">
+        <button id="btnCrack">Kırmayı Deneye Başla</button>
+      </div>
+
+      <div id="crackCandidates" class="box"></div>
+    </section>
+  </main>
+
+  <script src="js/dogrusal.js"></script>
+</body>
+</html>

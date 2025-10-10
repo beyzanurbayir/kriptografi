@@ -3,87 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sezar Şifreleme — Uygulama Ödevi</title>
+  <title>Kriptografi Projesi</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/menu.css" />
 </head>
 <body>
   <header>
-    <h1>Sezar Şifreleme Uygulaması</h1>
-    <button id="modeToggle" style="margin-top:12px;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;">🌙 Dark Mode</button>
+    <h1>Kriptografi Projesi</h1>
+    <p>Lütfen kullanmak istediğiniz şifreleme yöntemini seçin</p>
   </header>
 
-  <nav class="tabs">
-    <button data-tab="encrypt" class="active">Şifreleme</button>
-    <button data-tab="decrypt">De-Şifreleme</button>
-    <button data-tab="crack">Şifre Kırma</button>
-  </nav>
-
-  <main>
-    <section id="encrypt" class="tab active">
-      <label for="plainInput">Düz Metin (girdi):</label>
-      <textarea id="plainInput" rows="5" placeholder="Düz metni buraya yazın (Türkçe)"></textarea>
-      <div class="row">
-        <label for="keyEncrypt">Anahtar (k):</label>
-        <input id="keyEncrypt" type="number" min="0" max="28" value="3" />
-        <button id="btnEncrypt">Şifrele</button>
-      </div>
-
-      <div class="row">
-        <label for="alphabetEncrypt">Alfabe:</label>
-        <select id="alphabetEncrypt">
-            <option value="tr">Türkçe (29 harf)</option>
-            <option value="en">İngilizce (26 harf)</option>
-        </select>
-       </div>
-
-      <label>Şifreli Metin (çıktı):</label>
-      <textarea id="cipherOutput" rows="3" readonly></textarea>
-
-      <div id="encryptHistory" class="box">
-        <strong>Şifreleme Geçmişi:</strong>
-        <ol id="encryptHistoryList"></ol>
-    </div>
-    </section>
-
-    <section id="decrypt" class="tab">
-      <label for="cipherInput">Şifreli Metin (girdi):</label>
-      <textarea id="cipherInput" rows="5" placeholder="Şifreli metni buraya yazın"></textarea>
-      <div class="row">
-        <label for="keyDecrypt">Anahtar (k):</label>
-        <input id="keyDecrypt" type="number" min="0" max="28" value="3" />
-        <button id="btnDecrypt">Deşifrele</button>
-      </div>
-
-      <div class="row">
-        <label for="alphabetDecrypt">Alfabe:</label>
-        <select id="alphabetDecrypt">
-            <option value="tr">Türkçe (29 harf)</option>
-            <option value="en">İngilizce (26 harf)</option>
-        </select>
-        </div>
-
-      <label>Düz Metin (çıktı):</label>
-      <textarea id="plainOutput" rows="3" readonly></textarea>
-
-      <div id="decryptHistory" class="box">
-        <strong>Deşifreleme Geçmişi:</strong>
-        <ol id="decryptHistoryList"></ol>
-    </div>
-    </section>
-
-    <section id="crack" class="tab">
-      <label for="crackInput">Şifreli Metin (girdi):</label>
-      <textarea id="crackInput" rows="5" placeholder="Kırmak istediğiniz şifreli metni buraya yazın"></textarea>
-      <div class="row">
-        <button id="btnCrack">Kırmayı Deneye Başla</button>
-      </div>
-      
-      <div id="freqList" class="box"></div>
-
-      <div id="crackCandidates" class="box"></div>
-    </section>
+  <main class="menu-container">
+    <a href="sezar.html" class="menu-card">
+      <h2>Sezar Şifreleme</h2>
+      <p>Harfleri belirli bir anahtara göre kaydırarak şifreleme yapar.</p>
+    </a>
+    <a href="dogrusal.html" class="menu-card">
+      <h2>Doğrusal Şifreleme</h2>
+      <p>f(x) = ax + b (mod 26) denklemini kullanarak şifreleme yapar.</p>
+    </a>
   </main>
 
-  <script src="js/script.js"></script>
 </body>
 </html>
