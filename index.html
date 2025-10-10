@@ -3,26 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kriptografi Projesi</title>
+  <title>Klasik Şifreleme Simülatörü</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/menu.css" />
 </head>
 <body>
-  <header>
-    <h1>Kriptografi Projesi</h1>
-    <p>Lütfen kullanmak istediğiniz şifreleme yöntemini seçin</p>
-  </header>
 
-  <main class="menu-container">
-    <a href="sezar.html" class="menu-card">
-      <h2>Sezar Şifreleme</h2>
-      <p>Harfleri belirli bir anahtara göre kaydırarak şifreleme yapar.</p>
-    </a>
-    <a href="dogrusal.html" class="menu-card">
-      <h2>Doğrusal Şifreleme</h2>
-      <p>f(x) = ax + b (mod 26) denklemini kullanarak şifreleme yapar.</p>
-    </a>
-  </main>
+  <div class="theme-switch-wrapper">
+    <span class="icon">☀️</span>
+    <label class="theme-switch" for="modeToggleCheckbox">
+      <input type="checkbox" id="modeToggleCheckbox" />
+      <span class="slider"></span>
+    </label>
+    <span class="icon">🌙</span>
+  </div>
 
+  <div class="main-content">
+    <header>
+      <h1>Klasik Şifreleme Simülatörü</h1>
+      <p>Lütfen kullanmak istediğiniz şifreleme yöntemini seçin</p>
+    </header>
+  
+    <main class="menu-container">
+      <a href="sezar.html" class="menu-card">
+        <h2>Sezar Şifreleme</h2>
+        <p>Harfleri belirli bir anahtara göre kaydırarak şifreleme yapar.</p>
+      </a>
+      <a href="dogrusal.html" class="menu-card">
+        <h2>Doğrusal Şifreleme</h2>
+        <p>f(x) = ax + b (mod 26) denklemini kullanarak şifreleme yapar.</p>
+      </a>
+    </main>
+  </div>
+  <script src="js/menu.js"></script>
 </body>
 </html>

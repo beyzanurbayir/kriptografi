@@ -1,7 +1,7 @@
 // js/dogrusal.js
 document.addEventListener('DOMContentLoaded', () => {
 
-  // === DİNAMİK YAPI: Alfabeler nesnesi geri eklendi ===
+  // === Alfabeler ===
   const alfabetler = {
     tr: ['a','b','c','ç','d','e','f','g','ğ','h','ı','i',
          'j','k','l','m','n','o','ö','p','r','s','ş','t',
@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // === Yardımcı Matematiksel Fonksiyonlar ===
 
-  // a ve b'nin en büyük ortak bölenini bulur (OBEB/GCD)
   function obeb(a, b) {
     while (b) {
       [a, b] = [b, a % b];
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return a;
   }
 
-  // a'nın mod M'e göre modüler tersini bulur
   function modInverse(a, M) {
     for (let x = 1; x < M; x++) {
       if (((a % M) * (x % M)) % M == 1) {
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // === Ana Şifreleme Fonksiyonları ===
 
-  // DİNAMİK YAPI: Fonksiyon artık alfabe ve mod (M) değerini parametre olarak alıyor
   function processText(text, a, b, alfabe, mode = 'encrypt') {
     const M = alfabe.length;
 
@@ -75,6 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
   
+  function copyToClipboard(text) {
+    try {
+      navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
   // === History Fonksiyonu ===
   function addToHistory(type, input, output, keyA, keyB, alfabe) {
       const listId = type === 'encrypt' ? 'encryptHistoryList' : 'decryptHistoryList';
@@ -125,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cipher = document.getElementById('crackInput').value;
     if (!cipher) { alert('Lütfen kırılacak şifreli metni giriniz.'); return; }
 
-    // DİNAMİK YAPI: Kırma işlemi için de alfabe seçimi önemli
     const crackAlphabetSelect = document.getElementById('alphabetCrack');
     const mode = crackAlphabetSelect.value;
     const alfabe = alfabetler[mode];
@@ -134,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const candidatesDiv = document.getElementById('crackCandidates');
     candidatesDiv.innerHTML = '<h4>Çözüm Adayları Hesaplanıyor...</h4>';
     
-    // Geçerli 'a' değerlerini dinamik olarak bul
     const valid_a_values = [];
     for (let i = 1; i < M; i++) {
         if (obeb(i, M) === 1) {
@@ -142,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Adayları hemen göstermek yerine biriktir ve sonra ekle (daha performanslı)
     let candidatesHTML = '';
     for (const a of valid_a_values) {
       for (let b = 0; b < M; b++) {
@@ -153,14 +160,57 @@ document.addEventListener('DOMContentLoaded', () => {
           <div style="padding:6px; border-bottom:1px dashed #ddd;">
             <div><strong>a=${a}, b=${b}</strong></div>
             <div style="white-space:pre-wrap;font-family:monospace;margin:6px 0">${escapeHtml(preview)}</div>
+            <div>
+              <button class="useCandidateBtn" data-a="${a}" data-b="${b}">Kullan</button>
+              <button class="copyCandidateBtn" data-text="${encodeURIComponent(cand)}">Kopyala</button>
+            </div>
           </div>
         `;
       }
     }
     candidatesDiv.innerHTML = candidatesHTML;
+
+    document.querySelectorAll('.useCandidateBtn').forEach(b => {
+        b.addEventListener('click', () => {
+            const keyA = parseInt(b.dataset.a);
+            const keyB = parseInt(b.dataset.b);
+            applyCandidateToDecryptTab(cipher, keyA, keyB);
+        });
+    });
+
+    document.querySelectorAll('.copyCandidateBtn').forEach(b => {
+        b.addEventListener('click', () => {
+            const text = decodeURIComponent(b.dataset.text);
+            copyToClipboard(text);
+            b.textContent = 'Kopyalandı';
+            setTimeout(() => b.textContent = 'Kopyala', 1200);
+        });
+    });
   });
 
-  // === localStorage, Sekme Yönetimi ve Dark Mode ===
+  function applyCandidateToDecryptTab(cipherText, keyA, keyB) {
+      const cipherInput = document.getElementById('cipherInput');
+      const keyAInput = document.getElementById('keyADecrypt');
+      const keyBInput = document.getElementById('keyBDecrypt');
+      const plainOutput = document.getElementById('plainOutput');
+      const crackAlphabetSelect = document.getElementById('alphabetCrack');
+
+      if (cipherInput) cipherInput.value = cipherText;
+      if (keyAInput) keyAInput.value = keyA;
+      if (keyBInput) keyBInput.value = keyB;
+      if (decryptSelect && crackAlphabetSelect) {
+          decryptSelect.value = crackAlphabetSelect.value;
+      }
+      
+      switchToTab('decrypt');
+
+      const alfabe = alfabetler[decryptSelect.value];
+      if (plainOutput) {
+          plainOutput.value = processText(cipherText, keyA, keyB, alfabe, 'decrypt');
+      }
+  }
+
+  // === localStorage ve Alfabe Seçimi ===
   if(encryptSelect){
     const saved = localStorage.getItem('alphabetEncryptLinear');
     if(saved) encryptSelect.value = saved;
@@ -173,20 +223,25 @@ document.addEventListener('DOMContentLoaded', () => {
     decryptSelect.addEventListener('change', e => localStorage.setItem('alphabetDecryptLinear', e.target.value));
   }
 
-  const modeToggle = document.getElementById('modeToggle');
-  if (modeToggle) {
+  // === Dark/Light Mode (YENİ VERSİYON) ===
+  const modeToggleCheckbox = document.getElementById('modeToggleCheckbox');
+  if (modeToggleCheckbox) {
+    // Sayfa yüklendiğinde kayıtlı temayı uygula ve anahtarı ayarla
     const savedMode = localStorage.getItem('mode') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    if (savedMode === 'dark') document.body.classList.add('dark');
-    modeToggle.textContent = savedMode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    if (savedMode === 'dark') {
+        document.body.classList.add('dark');
+        modeToggleCheckbox.checked = true;
+    }
 
-    modeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('mode', isDark ? 'dark' : 'light');
-      modeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    // Anahtar değiştiğinde temayı değiştir ve kaydet
+    modeToggleCheckbox.addEventListener('change', () => {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('mode', isDark ? 'dark' : 'light');
     });
   }
 
+  // === Sekme Yönetimi ===
   function switchToTab(tabId) {
     document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
     document.querySelectorAll('.tab').forEach(s => s.id === tabId ? s.classList.add('active') : s.classList.remove('active'));
