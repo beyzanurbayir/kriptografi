@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vigenere Şifreleme — Uygulama Ödevi</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a href="index.html" class="back-arrow-button">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+      <path d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z"/>
+    </svg>
+  </a>
+
+  <header>
+    <h1>Vigenere Şifreleme Uygulaması</h1>
+    <div class="theme-switch-wrapper">
+      <span class="icon">☀️</span>
+      <label class="theme-switch" for="modeToggleCheckbox">
+        <input type="checkbox" id="modeToggleCheckbox" />
+        <span class="slider"></span>
+      </label>
+      <span class="icon">🌙</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="encrypt" class="active">Şifreleme</button>
+    <button data-tab="decrypt">De-Şifreleme</button>
+    <button data-tab="keylength">Anahtar Uzunluğu</button>
+  </nav>
+
+  <main>
+    <section id="encrypt" class="tab active">
+      <label for="plainInput">Düz Metin (girdi):</label>
+      <textarea id="plainInput" rows="5" placeholder="Düz metni buraya yazın (Türkçe)"></textarea>
+
+      <div class="row">
+        <label for="keyEncrypt">Anahtar (kelime):</label>
+        <input id="keyEncrypt" type="text" value="ANAHTAR" style="width: 200px; font-family: monospace;" />
+        <button id="btnEncrypt">Şifrele</button>
+      </div>
+
+      <label>Şifreli Metin (çıktı):</label>
+      <textarea id="cipherOutput" rows="3" readonly></textarea>
+
+      <div id="encryptHistory" class="box">
+        <strong>Şifreleme Geçmişi:</strong>
+        <ol id="encryptHistoryList"></ol>
+    </div>
+    </section>
+
+    <section id="decrypt" class="tab">
+      <label for="cipherInput">Şifreli Metin (girdi):</label>
+      <textarea id="cipherInput" rows="5" placeholder="Şifreli metni buraya yazın"></textarea>
+
+      <div class="row">
+        <label for="keyDecrypt">Anahtar (kelime):</label>
+        <input id="keyDecrypt" type="text" value="ANAHTAR" style="width: 200px; font-family: monospace;" />
+        <button id="btnDecrypt">Deşifrele</button>
+      </div>
+
+      <label>Düz Metin (çıktı):</label>
+      <textarea id="plainOutput" rows="3" readonly></textarea>
+
+      <div id="decryptHistory" class="box">
+        <strong>Deşifreleme Geçmişi:</strong>
+        <ol id="decryptHistoryList"></ol>
+    </div>
+    </section>
+
+    <section id="keylength" class="tab">
+      <label for="keyLengthInput">Şifreli Metin (girdi):</label>
+      <textarea id="keyLengthInput" rows="5" placeholder="Anahtar uzunluğunu tahmin etmek istediğiniz şifreli metni buraya yazın"></textarea>
+
+      <div class="row">
+        <label for="maxKeyLength">Max. Anahtar Uzunluğu:</label>
+        <input id="maxKeyLength" type="number" min="1" max="50" value="10" />
+        <button id="btnFindKeyLength">Anahtar Uzunluğunu Bul</button>
+      </div>
+
+      <div id="keyLengthResults" class="box"></div>
+    </section>
+  </main>
+
+  <script src="js/vigenere.js"></script>
+</body>
+</html>
