@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resim Permütasyon Şifreleme</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Resim/Canvas alanları için stiller */
+    .image-container {
+      border: 2px dashed var(--tab-bg);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      min-height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--box-bg);
+      overflow: auto;
+    }
+    .image-container canvas {
+      max-width: 100%;
+    }
+    .image-container p {
+      color: var(--secondary-text);
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-arrow-button">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+      <path d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z"/>
+    </svg>
+  </a>
+
+  <header>
+    <h1>Resim Permütasyon Şifreleme</h1>
+    <div class="theme-switch-wrapper">
+      <span class="icon">☀️</span>
+      <label class="theme-switch" for="modeToggleCheckbox">
+        <input type="checkbox" id="modeToggleCheckbox" />
+        <span class="slider"></span>
+      </label>
+      <span class="icon">🌙</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="encrypt" class="active">Şifreleme</button>
+    <button data-tab="decrypt">De-Şifreleme</button>
+  </nav>
+
+  <main>
+    <section id="encrypt" class="tab active">
+      <label for="encryptImageInput">Düz Resim Dosyası (girdi):</label>
+      <input type="file" id="encryptImageInput" accept="image/*" />
+
+      <div class="row">
+        <label for="encryptKey">Permütasyon Anahtarı:</label>
+        <input id="encryptKey" type="text" placeholder="Örn: 35241" maxlength="9" style="width: 150px; font-family: monospace;" />
+        <button id="btnEncrypt">Şifrele</button>
+      </div>
+      
+      <label>Şifrelenmiş Resim (çıktı):</label>
+      <div class="image-container">
+        <canvas id="encryptCanvasOutput"></canvas>
+      </div>
+    </section>
+
+    <section id="decrypt" class="tab">
+      <label for="decryptImageInput">Şifreli Resim Dosyası (girdi):</label>
+      <input type="file" id="decryptImageInput" accept="image/*" />
+      
+      <div class="row">
+        <label for="decryptKey">Permütasyon Anahtarı:</label>
+        <input id="decryptKey" type="text" placeholder="Örn: 35241" maxlength="9" style="width: 150px; font-family: monospace;" />
+        <button id="btnDecrypt">Deşifrele</button>
+      </div>
+      
+      <label>Düz Resim (çıktı):</label>
+      <div class="image-container">
+        <canvas id="decryptCanvasOutput"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="encryptCanvasInput" style="display: none;"></canvas>
+  <canvas id="decryptCanvasInput" style="display: none;"></canvas>
+
+  <script src="js/resim_permutasyon.js"></script>
+</body>
+</html>
