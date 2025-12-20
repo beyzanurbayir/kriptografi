@@ -1,16 +1,17 @@
 # Klasik Şifreleme Simülatörü
 
-Bu proje, **Sezar (Caesar)**, **Doğrusal (Affine)**, **Vigenere** ve **Resim Permütasyon** şifreleme gibi klasik kriptografi algoritmaları ve teknikleri için geliştirilmiş web tabanlı bir simülatördür. Uygulama, kullanıcıların metinleri veya resimleri şifrelemesine, deşifre etmesine ve şifreli metinler üzerinde temel kriptanaliz işlemleri yapmasına olanak tanır.
+Bu proje, **Sezar (Caesar)**, **Doğrusal (Affine)**, **Vigenere**, **Resim Permütasyon** ve **Üç-Geçiş Protokolü** şifreleme gibi klasik kriptografi algoritmaları ve teknikleri için geliştirilmiş web tabanlı bir simülatördür. Uygulama, kullanıcıların metinleri veya resimleri şifrelemesine, deşifre etmesine ve şifreli metinler üzerinde temel kriptanaliz işlemleri yapmasına olanak tanır.
 
 ---
 
 ## Proje Yapısı
 
-Uygulama, dört ana modülden oluşmaktadır:
+Uygulama, beş ana modülden oluşmaktadır:
 1.  **Sezar Şifreleme:** Harflerin alfabe üzerinde sabit bir anahtar kadar kaydırılması prensibine dayanır.
 2.  **Doğrusal Şifreleme:** `f(x) = ax + b (mod M)` matematiksel denklemini kullanarak daha karmaşık bir şifreleme sunar.
 3.  **Vigenere Şifreleme:** Bir anahtar kelime kullanarak metindeki her harfi farklı miktarlarda kaydıran çoklu alfabeli bir şifrelemedir.
 4.  **Resim Permütasyon Şifreleme:** Bir permütasyon anahtarı kullanarak resim dosyalarının piksellerini yeniden düzenleyerek şifreler.
+5. **Üç-Geçiş Protokolü:** Anahtar paylaşımı yapmadan mesaj gönderimini sağlayan kalıcı bir protokol simülasyonudur.
 
 ---
 
@@ -46,6 +47,9 @@ Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
 - **Piksel Permütasyonu:** Resmin piksel verilerini bloklara ayırır ve her bloğun piksellerini anahtara göre yeniden düzenler.
 - **Görsel Çıktı:** Şifrelenmiş veya deşifrelenmiş resmi doğrudan ekranda gösterir.
 
+### Üç-Geçiş Protokolü
+- **Protokol Denetimi:** Girilen P, A ve B değerlerinin kuralların (asallık, aralarındaki asallık) uygunluğunu denetler.
+- **Adım Adım Simülasyon:** Mesajın kilitlenmesi ve açılma aşamalarını sonuçlarıyla birlikte listeler.
 ---
 
 ## Kurulum ve Çalıştırma
