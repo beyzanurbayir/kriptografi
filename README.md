@@ -12,6 +12,7 @@ Uygulama, beş ana modülden oluşmaktadır:
 3.  **Vigenere Şifreleme:** Bir anahtar kelime kullanarak metindeki her harfi farklı miktarlarda kaydıran çoklu alfabeli bir şifrelemedir.
 4.  **Resim Permütasyon Şifreleme:** Bir permütasyon anahtarı kullanarak resim dosyalarının piksellerini yeniden düzenleyerek şifreler.
 5. **Üç-Geçiş Protokolü:** Anahtar paylaşımı yapmadan mesaj gönderimini sağlayan kalıcı bir protokol simülasyonudur.
+6. **RSA Şifreleme:** Açık anahtarlı şifreleme mantığına dayanan, asal sayılar üzerinden anahtar üretimi ve mesaj iletimi sağlayan bir algoritmadır.
 
 ---
 
@@ -50,6 +51,11 @@ Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
 ### Üç-Geçiş Protokolü
 - **Protokol Denetimi:** Girilen P, A ve B değerlerinin kuralların (asallık, aralarındaki asallık) uygunluğunu denetler.
 - **Adım Adım Simülasyon:** Mesajın kilitlenmesi ve açılma aşamalarını sonuçlarıyla birlikte listeler.
+
+### RSA Şifreleme
+- **Asallık ve Kural Denetimi:** p ve q değerlerinin asallığını, e değerinin ise Φ(n) ile aralarında asal olduğunu kontrol eder.
+
+- **Adım Adım Simülasyon:** Açık anahtarın oluşturulması, şifreli mesajın iletilmesi ve mesajın geri çözülme aşamalarını listeler.
 ---
 
 ## Kurulum ve Çalıştırma
@@ -63,5 +69,6 @@ Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
 ## Kullanım Notları
 
 - **Anahtar Değerleri:** Lütfen her algoritma için geçerli anahtar türlerine (sayı, kelime, permütasyon dizisi) ve kurallarına (asal olma, benzersiz rakamlar vb.) dikkat ediniz.
+- **Büyük Sayı Desteği:** Üç-Geçiş Protokolü ve RSA simülasyonunda 8 basamağa kadar sayılarla işlem yapabilmek için BigInt yapısı kullanılmaktadır.
 - **Tercihlerin Kaydedilmesi:** Alfabe seçimleriniz (ilgili modüllerde) ve tema tercihiniz, tarayıcınızın yerel depolama alanına (`localStorage`) kaydedilir.
 - **Karakter Koruma (Metin Modülleri):** Metin tabanlı şifrelemelerde alfabe dışında kalan tüm karakterler (sayılar, boşluklar, noktalama işaretleri vb.) değiştirilmeden korunur.
