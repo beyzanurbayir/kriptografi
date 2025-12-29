@@ -1,35 +1,72 @@
+/* css/menu.css - Başlık yukarı/ortada + kartlar ortalı + çerçeve sadece içeriği sarsın */
+
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* Eskiden tam ortalıyordu, bu yüzden başlık aşağı kayıyordu */
   min-height: 100vh;
   padding: 20px;
-}
 
-.main-content {
-  text-align: center;
-}
-
-.main-content header h1 {
-  font-size: 2.8rem;
-}
-
-.main-content header p {
-  font-size: 1.2rem;
-}
-
-.menu-container {
   display: flex;
-  gap: 30px; 
-  margin-top: 40px; 
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start; /* ✅ yukarıdan başlasın */
+  align-items: center;         /* ✅ yatayda ortada */
 }
 
+/* Ana içerik */
+.main-content {
+  width: 100%;
+  max-width: none !important; /* styles.css'teki sınırları ezmek için */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ✅ Başlığı yukarı taşı + ortala */
+.page-header {
+  text-align: center;
+  margin-top: 10px;   /* daha yukarı */
+  margin-bottom: 18px;
+}
+
+.page-header h1 {
+  font-size: 2.8rem;
+  margin: 0;
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  margin: 8px 0 0;
+}
+
+/* ✅ Gri çerçeve: sayfaya yayılmasın, sadece kartları sarsın */
+.menu-frame {
+  display: inline-block;  /* ✅ içerik kadar genişlesin */
+  padding: 10px;          /* ✅ kartların etrafında 10px boşluk */
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06); /* gri panel hissi */
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+  margin-top: 18px;
+}
+
+/* ✅ 3-3-1 düzen: grid */
+.menu-container {
+  display: grid;
+  grid-template-columns: repeat(3, 320px);
+  gap: 30px;
+
+  /* ✅ kartlar tam ortada dursun */
+  justify-content: center;
+  align-content: start;
+
+  width: auto;
+  max-width: none !important;
+  margin: 0; /* frame zaten ortalıyor */
+}
+
+/* Kart */
 .menu-card {
   display: block;
-  width: 320px; 
-  padding: 40px; 
+  width: 320px;
+  padding: 30px;
   border-radius: 12px;
   text-decoration: none;
   background: var(--main-bg);
@@ -38,10 +75,11 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   will-change: transform;
+  text-align: left;
 }
 
 body.dark .menu-card {
-  border-color: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.10);
 }
 
 .menu-card:hover {
@@ -52,7 +90,7 @@ body.dark .menu-card {
 
 .menu-card h2 {
   margin: 0 0 10px;
-  font-size: 1.8rem; 
+  font-size: 1.8rem;
   color: var(--primary);
   transition: color 0.3s ease;
 }
@@ -68,7 +106,48 @@ body.dark .menu-card {
   line-height: 1.5;
 }
 
+/* Tema switch */
 .theme-switch-wrapper {
-  transform: scale(1.25); 
-  transform-origin: top right; 
+  position: fixed; /* sağ üstte sabit dursun */
+  top: 18px;
+  right: 18px;
+
+  transform: scale(1.15);
+  transform-origin: top right;
+}
+
+/* ✅ Tablet: 2 sütun */
+@media (max-width: 1100px) {
+  .menu-container {
+    grid-template-columns: repeat(2, 320px);
+  }
+}
+
+/* ✅ Mobil: 1 sütun */
+@media (max-width: 740px) {
+  body {
+    align-items: stretch; /* mobilde taşma olmasın */
+  }
+
+  .menu-frame {
+    width: 100%;
+    max-width: 420px; /* frame ekranı kaplamasın */
+  }
+
+  .menu-container {
+    grid-template-columns: 1fr;
+    justify-content: center;
+  }
+
+  .menu-card {
+    width: 100%;
+    max-width: 350px;
+    justify-self: center;
+  }
+  /* El-Gamal kartını Üç-Geçiş Protokolü'nün altına, ortaya al */
+.menu-card:last-child {
+  grid-column: 2;          /* orta sütun */
+  justify-self: center;    /* tam ortala */
+}
+
 }

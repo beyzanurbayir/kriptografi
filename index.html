@@ -19,40 +19,52 @@
   </div>
 
   <div class="main-content">
-    <header>
+    <header class="page-header">
       <h1>Klasik Şifreleme Simülatörü</h1>
       <p>Lütfen kullanmak istediğiniz şifreleme yöntemini seçin</p>
     </header>
-  
-    <main class="menu-container">
-      <a href="sezar.html" class="menu-card">
-        <h2>Sezar Şifreleme</h2>
-        <p>Harfleri belirli bir anahtara göre kaydırarak şifreleme yapar.</p>
-      </a>
-      <a href="dogrusal.html" class="menu-card">
-        <h2>Doğrusal Şifreleme</h2>
-        <p>f(x) = ax + b (mod 26) denklemini kullanarak şifreleme yapar.</p>
-      </a>
-      <a href="vigenere.html" class="menu-card">
-        <h2>Vigenere Şifreleme</h2>
-        <p>Bir anahtar kelime kullanarak Sezar şifresini tekrarlı uygular.</p>
-      </a>
-      <a href="resim_permutasyon.html" class="menu-card">
-        <h2>Resim Permütasyon Şifreleme</h2>
-        <p>Permütasyon anahtarı kullanarak bir resim dosyasını şifreler.</p>
-      </a>
-      
-      <a href="uc_gecis.html" class="menu-card">
-        <h2>Üç-Geçiş Protokolü</h2>
-        <p>Anahtar paylaşımı olmadan güvenli mesaj gönderimini simüle eder.</p>
-      </a>
 
-      <a href="rsa.html" class="menu-card">
-        <h2>RSA Şifreleme</h2>
-        <p>p, q ve e değerleri ile RSA algoritmasını simüle eder.</p>
-      </a>
-    </main>
+    <!-- ✅ Gri çerçeve artık sadece kartları saracak -->
+    <section class="menu-frame">
+      <main class="menu-container">
+        <a href="sezar.html" class="menu-card">
+          <h2>Sezar Şifreleme</h2>
+          <p>Harfleri belirli bir anahtara göre kaydırarak şifreleme yapar.</p>
+        </a>
+
+        <a href="dogrusal.html" class="menu-card">
+          <h2>Doğrusal Şifreleme</h2>
+          <p>f(x) = ax + b (mod 26) denklemini kullanarak şifreleme yapar.</p>
+        </a>
+
+        <a href="vigenere.html" class="menu-card">
+          <h2>Vigenere Şifreleme</h2>
+          <p>Bir anahtar kelime kullanarak Sezar şifresini tekrarlı uygular.</p>
+        </a>
+
+        <a href="resim_permutasyon.html" class="menu-card">
+          <h2>Resim Permütasyon Şifreleme</h2>
+          <p>Permütasyon anahtarı kullanarak bir resim dosyasını şifreler.</p>
+        </a>
+
+        <a href="uc_gecis.html" class="menu-card">
+          <h2>Üç-Geçiş Protokolü</h2>
+          <p>Anahtar paylaşımı olmadan güvenli mesaj gönderimini simüle eder.</p>
+        </a>
+
+        <a href="rsa.html" class="menu-card">
+          <h2>RSA Şifreleme</h2>
+          <p>p, q ve e değerleri ile RSA algoritmasını simüle eder.</p>
+        </a>
+
+        <a href="elgamal.html" class="menu-card">
+          <h2>El-Gamal Şifreleme</h2>
+          <p>İlkel kök ve açık anahtar mantığına dayalı şifreleme simülasyonu.</p>
+        </a>
+      </main>
+    </section>
   </div>
+
   <script src="js/menu.js"></script>
 </body>
 </html>
