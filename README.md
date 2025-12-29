@@ -13,13 +13,13 @@ Uygulama, beş ana modülden oluşmaktadır:
 4.  **Resim Permütasyon Şifreleme:** Bir permütasyon anahtarı kullanarak resim dosyalarının piksellerini yeniden düzenleyerek şifreler.
 5. **Üç-Geçiş Protokolü:** Anahtar paylaşımı yapmadan mesaj gönderimini sağlayan kalıcı bir protokol simülasyonudur.
 6. **RSA Şifreleme:** Açık anahtarlı şifreleme mantığına dayanan, asal sayılar üzerinden anahtar üretimi ve mesaj iletimi sağlayan bir algoritmadır.
+7. **El-Gamal Şifreleme:** Diffie-Hellman anahtar değişimine dayalı, ilkel kök ve açık anahtar mantığını kullanan algoritma simülasyonu.
 
 ---
 
 ## Ortak Özellikler
 
 Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
-- **Şifreleme ve Deşifreleme:** Kullanıcıdan alınan metni veya resmi belirlenen anahtarlara göre şifreler veya çözer.
 - **Alfabe Desteği (Metin Modülleri):** Sezar ve Doğrusal modülleri Türkçe (29 harf) ve İngilizce (26 harf) alfabelerini destekler. Vigenere modülü şu anda sadece Türkçe alfabeyi desteklemektedir. Resim modülü alfabe kullanmaz.
 - **Geçmiş (History) Kaydı (Metin Modülleri):** Sezar, Doğrusal ve Vigenere modüllerinde son yapılan şifreleme/deşifreleme işlemleri listelenir.
 - **Dark/Light Mode:** Kullanıcı tercihine göre sayfa teması değiştirilebilir ve bu tercih tarayıcıya kaydedilir.
@@ -33,20 +33,24 @@ Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
 - **Frekans Analizi:** Şifreli metindeki harflerin kullanım sıklığını bir liste olarak gösterir.
 - **Brute-Force Denemeleri:** Olası tüm anahtarlar (`k`) için deşifre denemelerini listeler.
 - **Frekans Tabanlı Tahminler:** Sık kullanılan harflerden yola çıkarak olası doğru anahtarı tahmin eder ve öneri olarak sunar.
+- **Şifreleme ve Deşifreleme:** Kullanıcıdan alınan metni veya resmi belirlenen anahtarlara göre şifreler veya çözer.
 
 ### Doğrusal Şifreleme
 - **Anahtar Geçerliliği Kontrolü:** Şifreleme için kullanılan `a` anahtarının, alfabe uzunluğu ile aralarında asal olup olmadığını kontrol ederek kullanıcıyı uyarır.
 - **Kapsamlı Brute-Force:** Olası tüm geçerli `a` ve `b` anahtar çiftleri için deşifre denemelerini listeler.
+- **Şifreleme ve Deşifreleme:** Kullanıcıdan alınan metni veya resmi belirlenen anahtarlara göre şifreler veya çözer.
 
 ### Vigenere Şifreleme
 - **Metin Tabanlı Anahtar:** Şifreleme anahtarı olarak bir kelime kullanılır.
 - **Anahtar Uzunluğu Tahmini:** Şifreli metni analiz ederek, metni farklı miktarlarda kaydırıp aynı indisteki harflerin çakışma sayılarını hesaplar. En yüksek çakışma sayısını veren uzunluğu muhtemel anahtar uzunluğu olarak önerir.
+- **Şifreleme ve Deşifreleme:** Kullanıcıdan alınan metni veya resmi belirlenen anahtarlara göre şifreler veya çözer.
 
 ### Resim Permütasyon Şifreleme
 - **Resim Dosyası Girişi:** Şifrelemek veya deşifrelemek için kullanıcıdan bir resim dosyası alır.
 - **Permütasyon Anahtarı:** 1-9 arası rakamlardan oluşan, en fazla 9 haneli ve benzersiz rakamlar içeren bir anahtar kullanır (örn: 35241).
 - **Piksel Permütasyonu:** Resmin piksel verilerini bloklara ayırır ve her bloğun piksellerini anahtara göre yeniden düzenler.
 - **Görsel Çıktı:** Şifrelenmiş veya deşifrelenmiş resmi doğrudan ekranda gösterir.
+- **Şifreleme ve Deşifreleme:** Kullanıcıdan alınan metni veya resmi belirlenen anahtarlara göre şifreler veya çözer.
 
 ### Üç-Geçiş Protokolü
 - **Protokol Denetimi:** Girilen P, A ve B değerlerinin kuralların (asallık, aralarındaki asallık) uygunluğunu denetler.
@@ -54,6 +58,9 @@ Tüm modüllerde aşağıdaki ortak özellikler bulunmaktadır:
 
 ### RSA Şifreleme
 - **Asallık ve Kural Denetimi:** p ve q değerlerinin asallığını, e değerinin ise Φ(n) ile aralarında asal olduğunu kontrol eder.
+
+### El-Gamal Şifreleme
+- **İlkel Kök Doğrulaması:** Seçilen üreteç değerinin uygunluğunu denetleyerek çift bileşenli şifreleme ve deşifreleme adımlarını sayısal sonuçlarla listeler.
 
 - **Adım Adım Simülasyon:** Açık anahtarın oluşturulması, şifreli mesajın iletilmesi ve mesajın geri çözülme aşamalarını listeler.
 ---
